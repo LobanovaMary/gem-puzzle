@@ -1,7 +1,7 @@
 const createPuzzleField = (size = 4) => {
   const puzzleContainer = document.querySelector('#puzzle-container');
   const widthPuzzleContainerr = puzzleContainer.offsetWidth;
-  const widthPuzzleItem = widthPuzzleContainerr / size;
+  const sizePuzzleItem = widthPuzzleContainerr / size;
   const puzzle = [];
 
   function getRow(pos) {
@@ -21,8 +21,8 @@ const createPuzzleField = (size = 4) => {
       puzzle.push({
         value: i,
         position: i,
-        x: (getCol(i) - 1) * widthPuzzleItem,
-        y: (getRow(i) - 1) * widthPuzzleItem,
+        x: (getCol(i) - 1) * sizePuzzleItem,
+        y: (getRow(i) - 1) * sizePuzzleItem,
         disabled: false,
       });
     }
@@ -32,10 +32,19 @@ const createPuzzleField = (size = 4) => {
     puzzleContainer.innerHTML = '';
     for (let puzzleItem of puzzle) {
       if (puzzleItem.disabled) continue;
-      puzzleContainer.innerHTML += `<div class="puzzle-item" style = "width: ${widthPuzzleItem}px; height: ${widthPuzzleItem}px; top: ${puzzleItem.y}px; left: ${puzzleItem.x}px;">
+      puzzleContainer.innerHTML += `<div class="puzzle-item" style = "width: ${sizePuzzleItem}px; height: ${sizePuzzleItem}px; top: ${puzzleItem.y}px; left: ${puzzleItem.x}px;">
         ${puzzleItem.value}
         </div>`;
     }
+  }
+
+  function getRandomValues() {
+    const values = [];
+    for (let i = 1; i <= puzzle.length; i++) {
+      values.push(i);
+    }
+    const randomValues = values.sort(() => Math.random() - 0.5);
+    return randomValues;
   }
 
   function randomizePuzzle() {
@@ -50,92 +59,11 @@ const createPuzzleField = (size = 4) => {
     puzzleWithValueOf9.disabled = true;
   }
 
-  function getRandomValues() {
-    const values = [];
-    for (let i = 1; i <= puzzle.length; i++) {
-      values.push(i);
-    }
-    const randomValues = values.sort(() => Math.random() - 0.5);
-    return randomValues;
-  }
-  function getRightPuzzle() {
-    /* get the puzzle just right to the empty puzzle */
-    const emptyPuzzle = getEmptyPuzzle();
-    const isRightEdge = getCol(emptyPuzzle.position) === size;
-    if (isRightEdge) {
-      return null;
-    }
-    const puzzle = getPuzzleByPos(emptyPuzzle.position + 1);
-    return puzzle;
-  }
-  function getLeftPuzzle() {
-    /* get the puzzle just left to the empty puzzle */
-    const emptyPuzzle = getEmptyPuzzle();
-    const isLeftEdge = getCol(emptyPuzzle.position) === 1;
-    if (isLeftEdge) {
-      return null;
-    }
-    const puzzle = getPuzzleByPos(emptyPuzzle.position - 1);
-    return puzzle;
-  }
-  function getAbovePuzzle() {
-    /* get the puzzle just above to the empty puzzle */
-    const emptyPuzzle = getEmptyPuzzle();
-    const isTopEdge = getRow(emptyPuzzle.position) === 1;
-    if (isTopEdge) {
-      return null;
-    }
-    const puzzle = getPuzzleByPos(emptyPuzzle.position - size);
-    return puzzle;
-  }
-  function getBelowPuzzle() {
-    /* get the puzzle just below to the empty puzzle */
-    const emptyPuzzle = getEmptyPuzzle();
-    const isBottomEdge = getRow(emptyPuzzle.position) === size;
-    if (isBottomEdge) {
-      return null;
-    }
-    const puzzle = getPuzzleByPos(emptyPuzzle.position + size);
-    return puzzle;
-  }
+  generatePuzzle();
+  randomizePuzzle();
+  renderPuzzle();
+  console.log(puzzle);
 
-  function getEmptyPuzzle() {
-    return puzzle.find((item) => item.disabled);
-  }
-
-  function getPuzzleByPos(pos) {
-    return puzzle.find((item) => item.position === pos);
-  }
-
-  function moveLeft() {
-    const emptyPuzzle = getEmptyPuzzle();
-    const rightPuzzle = getRightPuzzle();
-    if (rightPuzzle) {
-      swapPositions(emptyPuzzle, rightPuzzle, true);
-    }
-  }
-  function moveRight() {
-    const emptyPuzzle = getEmptyPuzzle();
-    const leftPuzzle = getLeftPuzzle();
-    console.log(emptyPuzzle, leftPuzzle);
-    if (leftPuzzle) {
-      swapPositions(emptyPuzzle, leftPuzzle, true);
-    }
-  }
-  function moveUp() {
-    const emptyPuzzle = getEmptyPuzzle();
-    const belowPuzzle = getBelowPuzzle();
-    if (belowPuzzle) {
-      swapPositions(emptyPuzzle, belowPuzzle, false);
-    }
-  }
-  function moveDown() {
-    const emptyPuzzle = getEmptyPuzzle();
-    const abovePuzzle = getAbovePuzzle();
-    if (abovePuzzle) {
-      swapPositions(emptyPuzzle, abovePuzzle, false);
-    }
-  }
   function getEmptyPuzzle() {
     return puzzle.find((item) => item.disabled);
   }
@@ -160,32 +88,27 @@ const createPuzzleField = (size = 4) => {
     }
   }
 
-  function handleKeyDown(e) {
-    console.log(e.key);
-    switch (e.key) {
-      case 'ArrowLeft':
-        moveLeft();
-        break;
-      case 'ArrowRigth':
-        moveRight();
-        break;
-      case 'ArrowUp':
-        moveUp();
-        break;
-      case ' ArrowDown':
-        moveDown();
-        break;
+  function movePuzzleItem(e) {
+    const targetItem = puzzle.find(
+      (item) => item.value === Number(e.target.innerHTML)
+    );
+    const posTargetItem = targetItem.position;
+    const emptySpace = getEmptyPuzzle();
+    const posEmptySpace = emptySpace.position;
+    if (
+      posTargetItem === posEmptySpace - 1 ||
+      posTargetItem === posEmptySpace + 1 ||
+      posTargetItem === posEmptySpace - size ||
+      posTargetItem === posEmptySpace + size
+    ) {
+      let isX = true;
+      if (targetItem.x === emptySpace.x) isX = false;
+      swapPositions(targetItem, emptySpace, isX);
+      renderPuzzle();
     }
   }
 
-  function handleInput() {
-    document.addEventListener('keydown', handleKeyDown);
-  }
-
-  generatePuzzle();
-  randomizePuzzle();
-  renderPuzzle();
-  handleInput();
+  puzzleContainer.addEventListener('click', movePuzzleItem);
 };
 
 export default createPuzzleField;

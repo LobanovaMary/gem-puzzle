@@ -11,13 +11,23 @@
 </head>
 
 <body>
-
     <div class="container">
         <h1 class="title">The Gem Puzzle Game</h1>
-
-        <div id="puzzle-container"></div>
-        <div class="controls">
-
+        <div class="puzzle-wrapper">
+            <div id="puzzle-container"></div>
+            <div class="controls">
+                <button>Shuffle & Start</button>
+                <button>Stop</button>
+                <button>Save</button>
+                <select name="size" id="size-field">
+                    <option value="3">3x3</option>
+                    <option value="4" selected>4x4</option>
+                    <option value="5">5x5</option>
+                    <option value="6">6x6</option>
+                    <option value="7">7x7</option>
+                    <option value="8">8x8</option>
+                </select>
+            </div>
         </div>
     </div>
 </body>
