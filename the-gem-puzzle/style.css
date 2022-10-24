@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital@0;1&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -11,4 +13,49 @@
 
 html {
   box-sizing: border-box;
+  font-family: 'Lato', sans-serif;
+}
+
+body {
+  background: #2c3e50;
+  background: -webkit-linear-gradient(to top, #3498db, #2c3e50);
+  background: linear-gradient(to top, #3498db, #2c3e50);
+}
+
+.container {
+  margin: auto;
+  width: 1280px;
+  min-height: 100vh;
+}
+
+.title {
+  text-align: center;
+  padding: 30px 0px 60px 0px;
+  color: #94e5f2;
+  font-size: 56px;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #94e5f2;
+  letter-spacing: 4px;
+}
+#puzzle-container {
+  width: 600px;
+  height: 600px;
+  border: 1px solid #9ca0db;
+  margin: auto;
+  position: relative;
+}
+.puzzle-item {
+  border: 1px solid #9ca0db;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.6em;
+  color: #dfc2ff;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #eddbff;
+  background-color: #575b8f;
+}
+.puzzle-item:hover {
+  cursor: pointer;
 }
