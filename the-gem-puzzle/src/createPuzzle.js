@@ -1,4 +1,4 @@
-const createPuzzleField = (size = 4) => {
+const createPuzzleField = (size) => {
   const puzzleContainer = document.querySelector('#puzzle-container');
   const widthPuzzleContainerr = puzzleContainer.offsetWidth;
   const sizePuzzleItem = widthPuzzleContainerr / size;
@@ -29,6 +29,7 @@ const createPuzzleField = (size = 4) => {
   }
 
   function renderPuzzle() {
+    console.log(puzzle);
     puzzleContainer.innerHTML = '';
     for (let puzzleItem of puzzle) {
       if (puzzleItem.disabled) continue;
@@ -62,7 +63,6 @@ const createPuzzleField = (size = 4) => {
   generatePuzzle();
   randomizePuzzle();
   renderPuzzle();
-  console.log(puzzle);
 
   function getEmptyPuzzle() {
     return puzzle.find((item) => item.disabled);
@@ -92,7 +92,10 @@ const createPuzzleField = (size = 4) => {
     const targetItem = puzzle.find(
       (item) => item.value === Number(e.target.innerHTML)
     );
+
+    console.log(targetItem);
     const posTargetItem = targetItem.position;
+
     const emptySpace = getEmptyPuzzle();
     const posEmptySpace = emptySpace.position;
     if (
