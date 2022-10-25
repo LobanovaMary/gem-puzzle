@@ -1,8 +1,10 @@
-const createPuzzleField = (size) => {
+const createPuzzleField = (sizeField) => {
+  const size = Number(sizeField);
   const puzzleContainer = document.querySelector('#puzzle-container');
+  const shuffleStart = document.querySelector('#shuffle-start');
   const widthPuzzleContainerr = puzzleContainer.offsetWidth;
   const sizePuzzleItem = widthPuzzleContainerr / size;
-  const puzzle = [];
+  let puzzle = [];
 
   function getRow(pos) {
     return Math.ceil(pos / size);
@@ -29,13 +31,10 @@ const createPuzzleField = (size) => {
   }
 
   function renderPuzzle() {
-    console.log(puzzle);
     puzzleContainer.innerHTML = '';
     for (let puzzleItem of puzzle) {
       if (puzzleItem.disabled) continue;
-      puzzleContainer.innerHTML += `<div class="puzzle-item" style = "width: ${sizePuzzleItem}px; height: ${sizePuzzleItem}px; top: ${puzzleItem.y}px; left: ${puzzleItem.x}px;">
-        ${puzzleItem.value}
-        </div>`;
+      puzzleContainer.innerHTML += `<div class="puzzle-item" style = "width: ${sizePuzzleItem}px; height: ${sizePuzzleItem}px; top: ${puzzleItem.y}px; left: ${puzzleItem.x}px;">${puzzleItem.value}</div>`;
     }
   }
 
@@ -60,12 +59,16 @@ const createPuzzleField = (size) => {
     puzzleWithValueOf9.disabled = true;
   }
 
-  generatePuzzle();
-  randomizePuzzle();
-  renderPuzzle();
-
   function getEmptyPuzzle() {
     return puzzle.find((item) => item.disabled);
+  }
+
+  function getTargetPuzzle(targetValue) {
+    for (let i = 0; i < puzzle.length; i++) {
+      if (puzzle[i].value === targetValue) {
+        return puzzle[i];
+      }
+    }
   }
 
   function swapPositions(firstPuzzle, secondPuzzle, isX = false) {
@@ -89,20 +92,17 @@ const createPuzzleField = (size) => {
   }
 
   function movePuzzleItem(e) {
-    const targetItem = puzzle.find(
-      (item) => item.value === Number(e.target.innerHTML)
-    );
-
-    console.log(targetItem);
-    const posTargetItem = targetItem.position;
-
+    const targetValue = Number(e.target.innerHTML);
+    const targetItem = getTargetPuzzle(targetValue);
+    const posTargetItem = targetItem?.position;
     const emptySpace = getEmptyPuzzle();
     const posEmptySpace = emptySpace.position;
+
     if (
       posTargetItem === posEmptySpace - 1 ||
       posTargetItem === posEmptySpace + 1 ||
-      posTargetItem === posEmptySpace - size ||
-      posTargetItem === posEmptySpace + size
+      posTargetItem === posEmptySpace + size ||
+      posTargetItem === posEmptySpace - size
     ) {
       let isX = true;
       if (targetItem.x === emptySpace.x) isX = false;
@@ -111,7 +111,17 @@ const createPuzzleField = (size) => {
     }
   }
 
+  function newGame() {
+    puzzle = [];
+    generatePuzzle();
+    randomizePuzzle();
+    renderPuzzle();
+  }
+
+  newGame();
+
   puzzleContainer.addEventListener('click', movePuzzleItem);
+  shuffleStart.addEventListener('click', newGame);
 };
 
 export default createPuzzleField;

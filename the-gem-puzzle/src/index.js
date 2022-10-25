@@ -7,5 +7,8 @@ import createPuzzleField from './createPuzzle.js';
   const sizeField = document.querySelector('#size-field');
   createPuzzleField(sizeField.value);
 
-  sizeField.addEventListener('input', () => createPuzzleField(sizeField.value));
+  sizeField.addEventListener('change', (e) => {
+    e.preventDefault;
+    createPuzzleField(sizeField.value);
+  });
 })();
