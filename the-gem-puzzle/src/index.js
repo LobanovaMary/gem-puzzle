@@ -1,14 +1,15 @@
 import createPuzzleField from './createPuzzle.js';
 
 (() => {
-  alert(
-    'Здрайвствуйте, это моя первая работа. Проверте, пожалуйста, в четверг. Я буду еще доделовать'
-  );
+  // alert(
+  //   'Здрайвствуйте, это моя первая работа. Проверте, пожалуйста, в четверг. Я буду еще доделовать'
+  // );
   const sizeField = document.querySelector('#size-field');
-  createPuzzleField(sizeField.value);
+  createPuzzleField();
 
-  sizeField.addEventListener('change', (e) => {
-    console.log('Hi from change resolution');
-    createPuzzleField(sizeField.value);
+  sizeField.addEventListener('change', () => {
+    document.querySelector('#puzzle-container').dataset.size =
+      sizeField.selectedIndex + 3;
+    createPuzzleField();
   });
 })();

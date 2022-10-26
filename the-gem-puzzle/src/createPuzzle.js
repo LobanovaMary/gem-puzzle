@@ -1,9 +1,11 @@
-const createPuzzleField = (sizeField) => {
-  const size = Number(sizeField);
+const createPuzzleField = () => {
   const puzzleContainer = document.querySelector('#puzzle-container');
   const shuffleStart = document.querySelector('#shuffle-start');
+  const moves = document.querySelector('.result__moves-counter');
   const audio = new Audio('./assets/sound.mp3');
+  const size = Number(puzzleContainer.dataset.size);
 
+  let countMove = 0;
   let widthPuzzleContainerr = puzzleContainer.offsetWidth;
   let sizePuzzleItem = widthPuzzleContainerr / size;
 
@@ -46,7 +48,7 @@ const createPuzzleField = (sizeField) => {
     puzzleContainer.innerHTML = '';
     for (let puzzleItem of puzzle) {
       if (puzzleItem.disabled) continue;
-      puzzleContainer.innerHTML += `<div class="puzzle-item" style = "width: ${sizePuzzleItem}px; height: ${sizePuzzleItem}px; top: ${puzzleItem.y}px; left: ${puzzleItem.x}px;">${puzzleItem.value}</div>`;
+      puzzleContainer.innerHTML += `<div class="puzzle-item" style = "width: ${sizePuzzleItem}px; height: ${sizePuzzleItem}px; top: ${puzzleItem.y}px; left: ${puzzleItem.x}px;" data-pos="${puzzleItem.position}">${puzzleItem.value}</div>`;
     }
   }
 
@@ -75,12 +77,8 @@ const createPuzzleField = (sizeField) => {
     return puzzle.find((item) => item.disabled);
   }
 
-  function getTargetPuzzle(targetValue) {
-    for (let i = 0; i < puzzle.length; i++) {
-      if (puzzle[i].value === targetValue) {
-        return puzzle[i];
-      }
-    }
+  function getTargetPuzzle(targetPos) {
+    return puzzle.find((item) => item.position === targetPos);
   }
 
   function swapPositions(firstPuzzle, secondPuzzle, isX = false) {
@@ -101,38 +99,44 @@ const createPuzzleField = (sizeField) => {
       firstPuzzle.y = secondPuzzle.y;
       secondPuzzle.y = temp;
     }
+    countMove++;
   }
 
   function movePuzzleItem(e) {
-    const targetValue = Number(e.target.innerHTML);
-    const targetItem = getTargetPuzzle(targetValue);
-    if (targetItem) {
-      const posTargetItem = targetItem?.position;
-      const emptySpace = getEmptyPuzzle();
-      const posEmptySpace = emptySpace.position;
+    try {
+      if (e.target.closest('.puzzle-item') != null) {
+        const targetPos = Number(e.target.closest('.puzzle-item').dataset.pos);
 
-      if (
-        posTargetItem === posEmptySpace - 1 ||
-        posTargetItem === posEmptySpace + 1 ||
-        posTargetItem === posEmptySpace + size ||
-        posTargetItem === posEmptySpace - size
-      ) {
-        let isX = true;
-        if (targetItem.x === emptySpace.x) isX = false;
-        audio.currentTime = 0;
-        swapPositions(targetItem, emptySpace, isX);
-        renderPuzzle();
-        audio.play();
+        const emptySpace = getEmptyPuzzle();
+        const posEmptySpace = emptySpace.position;
+        if (
+          targetPos === posEmptySpace - 1 ||
+          targetPos === posEmptySpace + 1 ||
+          targetPos === posEmptySpace + size ||
+          targetPos === posEmptySpace - size
+        ) {
+          const targetItem = getTargetPuzzle(targetPos);
+          let isX = true;
+          if (targetItem.x === emptySpace.x) isX = false;
+          audio.currentTime = 0;
+
+          swapPositions(targetItem, emptySpace, isX);
+          renderPuzzle();
+          audio.play();
+          moves.innerHTML = countMove;
+        }
       }
+    } catch (error) {
+      console.error(error);
     }
   }
 
   function newGame() {
-    console.log(' Hi im new game');
     puzzle = [];
     generatePuzzle();
     randomizePuzzle();
     renderPuzzle();
+    countMove = 0;
   }
 
   puzzleContainer.addEventListener('click', movePuzzleItem);
@@ -157,7 +161,6 @@ const createPuzzleField = (sizeField) => {
   }
 
   (function init() {
-    console.log('Im start');
     generatePuzzle();
     randomizePuzzle();
     renderPuzzle();

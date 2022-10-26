@@ -14,12 +14,13 @@
     <div class="container">
         <h1 class="title">The Gem Puzzle Game</h1>
         <div class="puzzle-wrapper">
-            <div id="puzzle-container"></div>
+            <div id="puzzle-container" data-size="4"></div>
             <div class="puzzle-header">
                 <div class="controls">
                     <button id='shuffle-start'>Shuffle & Start</button>
                     <button>Stop</button>
                     <button>Save</button>
+
                     <select name="size" id="size-field">
                         <option value="3">3x3</option>
                         <option value="4" selected>4x4</option>
@@ -28,9 +29,10 @@
                         <option value="7">7x7</option>
                         <option value="8">8x8</option>
                     </select>
+
                 </div>
                 <div class="result">
-                    <div class="result__moves">Moves: 56</div>
+                    <div class="result__moves">Moves: <span class="result__moves-counter">0</span> </div>
                     <div class="result__time">Time: 10 : 56</div>
                 </div>
             </div>
