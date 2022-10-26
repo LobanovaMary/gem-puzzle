@@ -179,3 +179,18 @@ button:hover {
     font-size: 1.3em;
   }
 }
+.sound {
+  width: 40px;
+  height: 40px;
+  background-image: url('./assets/volume-off.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.sound:hover {
+  cursor: pointer;
+}
+.sound-on {
+  background-image: url('./assets/volume-on.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}

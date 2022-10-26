@@ -7,13 +7,15 @@ const createPuzzleField = () => {
   const time = document.querySelector('.result__time-counter');
   const stopTimerBtn = document.querySelector('.play-stop');
 
-  let isTimerRun = false;
+  const sound = document.querySelector('.sound');
+
   let timerCounter;
+  let isTimerRun = false;
   let seconds = 0;
   let countMove = 0;
   let widthPuzzleContainerr = puzzleContainer.offsetWidth;
   let sizePuzzleItem = widthPuzzleContainerr / size;
-
+  let isGameOver = false;
   let puzzle = [];
 
   function getRow(pos) {
@@ -105,11 +107,22 @@ const createPuzzleField = () => {
       secondPuzzle.y = temp;
     }
     countMove++;
+    if (!isTimerRun) {
+      console.log('start time');
+      startTimer();
+    }
+    isGameOver = checkGameOver();
+  }
+
+  function checkGameOver() {
+    for (let i = 1; i <= puzzle.length; i++) {
+      if (i !== puzzle[i].position) return false;
+    }
+    return true;
   }
 
   function timer() {
     seconds++;
-
     time.innerHTML = `${String(Math.floor(seconds / 60)).padStart(
       2,
       '0'
@@ -117,6 +130,10 @@ const createPuzzleField = () => {
   }
 
   function movePuzzleItem(e) {
+    if (isGameOver) {
+      console.log('game over');
+      puzzleContainer.removeEventListener('click', movePuzzleItem);
+    }
     try {
       if (e.target.closest('.puzzle-item') != null) {
         const targetPos = Number(e.target.closest('.puzzle-item').dataset.pos);
@@ -136,9 +153,7 @@ const createPuzzleField = () => {
 
           swapPositions(targetItem, emptySpace, isX);
           renderPuzzle();
-          if (!isTimerRun) {
-            startTimer();
-          }
+
           audio.play();
           moves.innerHTML = countMove;
         }
@@ -173,6 +188,16 @@ const createPuzzleField = () => {
 
   puzzleContainer.addEventListener('click', movePuzzleItem);
   shuffleStart.addEventListener('click', newGame);
+
+  sound.addEventListener('click', () => {
+    sound.classList.toggle('sound-on');
+    if (sound.classList.contains('sound-on')) {
+      audio.muted = false;
+    } else {
+      audio.muted = true;
+    }
+  });
+
   stopTimerBtn.addEventListener('click', () => {
     if (!isTimerRun) {
       startTimer();
@@ -198,7 +223,6 @@ const createPuzzleField = () => {
       window.addEventListener('resize', getSmallResolution);
     }
   }
-
   (function init() {
     generatePuzzle();
     randomizePuzzle();
