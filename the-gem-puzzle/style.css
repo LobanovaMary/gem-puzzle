@@ -62,6 +62,7 @@ body {
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #eddbff;
   background-color: #575b8f;
+  transition: all 0.7s;
 }
 .puzzle-item:hover {
   cursor: pointer;

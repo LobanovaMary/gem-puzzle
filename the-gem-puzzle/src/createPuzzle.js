@@ -108,7 +108,6 @@ const createPuzzleField = () => {
     }
     countMove++;
     if (!isTimerRun) {
-      console.log('start time');
       startTimer();
     }
     isGameOver = checkGameOver();
@@ -149,11 +148,10 @@ const createPuzzleField = () => {
           const targetItem = getTargetPuzzle(targetPos);
           let isX = true;
           if (targetItem.x === emptySpace.x) isX = false;
-          audio.currentTime = 0;
 
+          audio.currentTime = 0;
           swapPositions(targetItem, emptySpace, isX);
           renderPuzzle();
-
           audio.play();
           moves.innerHTML = countMove;
         }
