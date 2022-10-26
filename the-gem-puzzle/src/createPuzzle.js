@@ -4,7 +4,10 @@ const createPuzzleField = () => {
   const moves = document.querySelector('.result__moves-counter');
   const audio = new Audio('./assets/sound.mp3');
   const size = Number(puzzleContainer.dataset.size);
+  const time = document.querySelector('.result__time-counter');
 
+  let timerCounter;
+  let seconds = 0;
   let countMove = 0;
   let widthPuzzleContainerr = puzzleContainer.offsetWidth;
   let sizePuzzleItem = widthPuzzleContainerr / size;
@@ -102,6 +105,15 @@ const createPuzzleField = () => {
     countMove++;
   }
 
+  function timer() {
+    seconds++;
+
+    time.innerHTML = `${String(Math.floor(seconds / 60)).padStart(
+      2,
+      '0'
+    )} : ${String(seconds % 60).padStart(2, '0')}`;
+  }
+
   function movePuzzleItem(e) {
     try {
       if (e.target.closest('.puzzle-item') != null) {
@@ -122,6 +134,7 @@ const createPuzzleField = () => {
 
           swapPositions(targetItem, emptySpace, isX);
           renderPuzzle();
+          timerCounter = setInterval(timer, 1000);
           audio.play();
           moves.innerHTML = countMove;
         }
@@ -136,7 +149,11 @@ const createPuzzleField = () => {
     generatePuzzle();
     randomizePuzzle();
     renderPuzzle();
+    clearInterval(timerCounter);
+    time.innerHTML = `00 : 00`;
+    seconds = 0;
     countMove = 0;
+    moves.innerHTML = countMove;
   }
 
   puzzleContainer.addEventListener('click', movePuzzleItem);
