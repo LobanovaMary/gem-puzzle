@@ -175,4 +175,7 @@ button:hover {
     font-size: 1em;
     padding: 15px 30px;
   }
+  .puzzle-item {
+    font-size: 1.3em;
+  }
 }

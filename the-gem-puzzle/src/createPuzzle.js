@@ -2,8 +2,11 @@ const createPuzzleField = (sizeField) => {
   const size = Number(sizeField);
   const puzzleContainer = document.querySelector('#puzzle-container');
   const shuffleStart = document.querySelector('#shuffle-start');
+  const audio = new Audio('./../assets/sound.mp3');
+
   let widthPuzzleContainerr = puzzleContainer.offsetWidth;
   let sizePuzzleItem = widthPuzzleContainerr / size;
+
   let puzzle = [];
 
   function getRow(pos) {
@@ -107,9 +110,6 @@ const createPuzzleField = (sizeField) => {
       const posTargetItem = targetItem?.position;
       const emptySpace = getEmptyPuzzle();
       const posEmptySpace = emptySpace.position;
-      console.log(`targetValue: ${targetValue}  targetItem: ${targetItem}`);
-      console.log(`posTargetItem: ${posTargetItem}`);
-      console.log(`emptySpace: ${emptySpace}  posEmptySpace: ${posEmptySpace}`);
 
       if (
         posTargetItem === posEmptySpace - 1 ||
@@ -119,8 +119,10 @@ const createPuzzleField = (sizeField) => {
       ) {
         let isX = true;
         if (targetItem.x === emptySpace.x) isX = false;
+        audio.currentTime = 0;
         swapPositions(targetItem, emptySpace, isX);
         renderPuzzle();
+        audio.play();
       }
     }
   }
