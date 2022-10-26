@@ -2,7 +2,7 @@ const createPuzzleField = (sizeField) => {
   const size = Number(sizeField);
   const puzzleContainer = document.querySelector('#puzzle-container');
   const shuffleStart = document.querySelector('#shuffle-start');
-  const audio = new Audio('./../assets/sound.mp3');
+  const audio = new Audio('./assets/sound.mp3');
 
   let widthPuzzleContainerr = puzzleContainer.offsetWidth;
   let sizePuzzleItem = widthPuzzleContainerr / size;
