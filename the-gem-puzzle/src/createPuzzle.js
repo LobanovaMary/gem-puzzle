@@ -2,8 +2,8 @@ const createPuzzleField = (sizeField) => {
   const size = Number(sizeField);
   const puzzleContainer = document.querySelector('#puzzle-container');
   const shuffleStart = document.querySelector('#shuffle-start');
-  const widthPuzzleContainerr = puzzleContainer.offsetWidth;
-  const sizePuzzleItem = widthPuzzleContainerr / size;
+  let widthPuzzleContainerr = puzzleContainer.offsetWidth;
+  let sizePuzzleItem = widthPuzzleContainerr / size;
   let puzzle = [];
 
   function getRow(pos) {
@@ -19,13 +19,22 @@ const createPuzzleField = (sizeField) => {
   }
 
   function generatePuzzle() {
-    for (let i = 1; i <= size * size; i++) {
-      puzzle.push({
-        value: i,
-        position: i,
-        x: (getCol(i) - 1) * sizePuzzleItem,
-        y: (getRow(i) - 1) * sizePuzzleItem,
-        disabled: false,
+    widthPuzzleContainerr = puzzleContainer.offsetWidth;
+    sizePuzzleItem = widthPuzzleContainerr / size;
+    if (puzzle.length === 0) {
+      for (let i = 1; i <= size * size; i++) {
+        puzzle.push({
+          value: i,
+          position: i,
+          x: (getCol(i) - 1) * sizePuzzleItem,
+          y: (getRow(i) - 1) * sizePuzzleItem,
+          disabled: false,
+        });
+      }
+    } else {
+      puzzle.map((item, i) => {
+        item.x = (getCol(i + 1) - 1) * sizePuzzleItem;
+        item.y = (getRow(i + 1) - 1) * sizePuzzleItem;
       });
     }
   }
@@ -94,34 +103,68 @@ const createPuzzleField = (sizeField) => {
   function movePuzzleItem(e) {
     const targetValue = Number(e.target.innerHTML);
     const targetItem = getTargetPuzzle(targetValue);
-    const posTargetItem = targetItem?.position;
-    const emptySpace = getEmptyPuzzle();
-    const posEmptySpace = emptySpace.position;
+    if (targetItem) {
+      const posTargetItem = targetItem?.position;
+      const emptySpace = getEmptyPuzzle();
+      const posEmptySpace = emptySpace.position;
+      console.log(`targetValue: ${targetValue}  targetItem: ${targetItem}`);
+      console.log(`posTargetItem: ${posTargetItem}`);
+      console.log(`emptySpace: ${emptySpace}  posEmptySpace: ${posEmptySpace}`);
 
-    if (
-      posTargetItem === posEmptySpace - 1 ||
-      posTargetItem === posEmptySpace + 1 ||
-      posTargetItem === posEmptySpace + size ||
-      posTargetItem === posEmptySpace - size
-    ) {
-      let isX = true;
-      if (targetItem.x === emptySpace.x) isX = false;
-      swapPositions(targetItem, emptySpace, isX);
-      renderPuzzle();
+      if (
+        posTargetItem === posEmptySpace - 1 ||
+        posTargetItem === posEmptySpace + 1 ||
+        posTargetItem === posEmptySpace + size ||
+        posTargetItem === posEmptySpace - size
+      ) {
+        let isX = true;
+        if (targetItem.x === emptySpace.x) isX = false;
+        swapPositions(targetItem, emptySpace, isX);
+        renderPuzzle();
+      }
     }
   }
 
   function newGame() {
+    console.log(' Hi im new game');
     puzzle = [];
     generatePuzzle();
     randomizePuzzle();
     renderPuzzle();
   }
 
-  newGame();
-
   puzzleContainer.addEventListener('click', movePuzzleItem);
   shuffleStart.addEventListener('click', newGame);
+
+  function getSmallResolution() {
+    if (window.innerWidth <= 680) {
+      generatePuzzle();
+      renderPuzzle();
+      window.removeEventListener('resize', getSmallResolution);
+      window.addEventListener('resize', getLargeResolution);
+    }
+  }
+
+  function getLargeResolution() {
+    if (window.innerWidth >= 680) {
+      generatePuzzle();
+      renderPuzzle();
+      window.removeEventListener('resize', getLargeResolution);
+      window.addEventListener('resize', getSmallResolution);
+    }
+  }
+
+  (function init() {
+    console.log('Im start');
+    generatePuzzle();
+    randomizePuzzle();
+    renderPuzzle();
+    if (window.innerWidth >= 680) {
+      window.addEventListener('resize', getSmallResolution);
+    } else {
+      window.addEventListener('resize', getLargeResolution);
+    }
+  })();
 };
 
 export default createPuzzleField;
