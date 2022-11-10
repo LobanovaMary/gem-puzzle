@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Gem Puzzle</title>
     <link rel="stylesheet" href="style.css">
-    <script src="./src/index.js" type="module"></script>
+    <script src="./src/script.js" type="module"></script>
 </head>
 
 <body>
@@ -20,15 +20,9 @@
                     <button id='shuffle-start'>Shuffle & Start</button>
                     <button class='play-stop'>Play</button>
                     <button>Save</button>
-
-                    <select name="size" id="size-field">
-                        <option value="3">3x3</option>
-                        <option value="4" selected>4x4</option>
-                        <option value="5">5x5</option>
-                        <option value="6">6x6</option>
-                        <option value="7">7x7</option>
-                        <option value="8">8x8</option>
-                    </select>
+                    <div id="size-field">
+                        <p>4x4</p>
+                    </div>
                     <div class="sound sound-on"></div>
                 </div>
                 <div class="result">
@@ -37,10 +31,10 @@
                 </div>
             </div>
             <div class="last-score">
-                <h2 class="last-score__title">Last Score</h2>
+                <h2 class="last-score__title">Score</h2>
                 <div class="last-score__field">
                     <ol>
-                        <li> 3x3 Time - 10 : 15 Moves - 56</li>
+                        <li> 4x4 Time - 10 : 15 Moves - 56</li>
                     </ol>
                 </div>
             </div>

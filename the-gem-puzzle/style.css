@@ -92,10 +92,10 @@ button:hover {
   padding: 8px 15px;
   border-radius: 25px;
   background-color: #575b8f;
-  width: 90px;
   color: #94e5f2;
   font-size: 1em;
   border: 1px solid #94e5f2;
+  text-align: center;
 }
 .last-score {
   display: flex;
